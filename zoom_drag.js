@@ -2,21 +2,21 @@
 
 function ZoomDrag(divMain, subElementSelector) {
     const that = this;
-    
+
     // config
     this.scale = 1;  // initial scale
     this.factor = 0.1;
     this.maxScale = 3;
     this.minScale = 0.2;
-    
+
     this.divMain = divMain;
 
     this.setZoom(this.scale);
-    this.setScroll({x: 0, y: 0}); 
+    this.setScroll({ x: 0, y: 0 });
 
     this.moveEnabled = false;  // set from outside
 
-    this.subElementSelector = subElementSelector;  
+    this.subElementSelector = subElementSelector;
 
 
     // dragging
@@ -52,7 +52,7 @@ function ZoomDrag(divMain, subElementSelector) {
             // scrollBy x and y
             if (dragX !== 0 || dragY !== 0) {
                 divMain.scrollBy(dragX, dragY);
-            }       
+            }
         }
 
     });
@@ -71,7 +71,7 @@ function ZoomDrag(divMain, subElementSelector) {
         // calculate new zoom
         let scale = that.scale + delta * that.factor * that.scale;
         scale = Math.max(that.minScale, Math.min(that.maxScale, scale));
-  
+
         for (const divSection of divMain.getElementsByTagName('section')) {
             const displayWidth = divSection.clientWidth * scale;
             const displayHeight = divSection.clientHeight * scale;
@@ -137,7 +137,7 @@ ZoomDrag.prototype = {
         scale = Math.max(this.minScale, Math.min(1, scale));
         const center = {
             x: (minX + maxX) / 2,
-            y: (minY + maxY) / 2 
+            y: (minY + maxY) / 2
         };
         const rectMain = this.divMain.getBoundingClientRect();
         const centerView = {
@@ -155,11 +155,16 @@ ZoomDrag.prototype = {
         for (const divSection of this.divMain.getElementsByTagName('section')) {
             divSection.style.transform = `scale(${scale}, ${scale})`;
         }
+
+        if (scale < 1) {
+            document.getElementById('dropdown-menu-node-wrapper').style.transform = `scale(${1 / scale}, ${1 / scale})`;
+        }
+
         this.scale = scale;
     },
 
     getNewScrollEvent(e, scaleOld, scaleNew) {
-        const pos = {x: e.clientX, y: e.clientY};
+        const pos = { x: e.clientX, y: e.clientY };
         return this.getNewScroll(pos, pos, scaleOld, scaleNew);
     },
 
