@@ -155,6 +155,11 @@ ZoomDrag.prototype = {
         for (const divSection of this.divMain.getElementsByTagName('section')) {
             divSection.style.transform = `scale(${scale}, ${scale})`;
         }
+
+        if (scale < 1) {
+            document.getElementById('dropdown-menu-node-wrapper').style.transform = `scale(${1 / scale}, ${1 / scale})`;
+        }
+        
         this.scale = scale;
     },
 
